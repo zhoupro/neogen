@@ -161,9 +161,14 @@ end
 ---@param annotation_convention string
 ---@return table { line, content }, with line being the line to append the content
 local function generate_content(parent, data, template, required_type, annotation_convention)
+
+    -- print(vim.inspect(data))
+    -- print(vim.inspect(template))
+
     local row, col = get_place_pos(parent, template.position, template.append, required_type)
 
-    local commentstring = vim.trim(vim.bo.commentstring:format(""))
+    -- local commentstring = vim.trim(vim.bo.commentstring:format(""))
+    local commentstring = ""
     annotation_convention = annotation_convention or template.annotation_convention
     local generated_template = template[annotation_convention]
 
@@ -289,6 +294,9 @@ return setmetatable({}, {
         -- Will try to generate the documentation from a template and the data found from the granulator
         local row, template_content, default_text =
             generate_content(parent_node, data, template, node_type, annotation_convention[filetype])
+
+        -- print(vim.inspect(template_content))
+        -- print(vim.inspect(default_text))
 
         local content = {}
         local marks_pos = {}

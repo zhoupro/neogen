@@ -1,3 +1,4 @@
+local i = require("neogen.types.template").item
 local template = require("neogen.template")
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
@@ -16,11 +17,35 @@ return {
                     extract = function(node)
                         local tree = {
                             {
-                                retrieve = "first",
+
+                                position = 1,
+                                -- retrieve = "first",
                                 node_type = "identifier",
                                 extract = "true",
                                 as = "func_name",
                             },
+                            {
+                                position = 2,
+                                subtree={
+                                    {
+                                        retrieve="all",
+                                        extract = "true",
+                                        as= i.Parameter,
+                                    }
+                                }
+                            },
+                            {
+                                position = 3,
+                                subtree={
+                                    {
+                                        retrieve="all",
+                                        extract = "true",
+                                        as= i.Return,
+                                    }
+                                }
+                            },
+
+
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
