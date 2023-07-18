@@ -5,22 +5,20 @@ local nodes_utils = require("neogen.utilities.nodes")
 
 return {
     parent = {
-        func = { "function_declaration", "method_declaration" },
+        func = { "function_declaration", "method_declaration", "method_spec" },
         type = { "const_declaration", "var_declaration", "type_declaration" },
         file = { "package_clause" },
     },
 
     data = {
         func = {
-            ["function_declaration"] = {
+            ["function_declaration|method_spec"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
                             {
 
                                 position = 1,
-                                -- retrieve = "first",
-                                node_type = "identifier",
                                 extract = "true",
                                 as = "func_name",
                             },
@@ -63,6 +61,28 @@ return {
                                 extract = "true",
                                 as = "func_name",
                             },
+
+                            {
+                                position = 3,
+                                subtree={
+                                    {
+                                        retrieve="all",
+                                        extract = "true",
+                                        as= i.Parameter,
+                                    }
+                                }
+                            },
+                            {
+                                position = 4,
+                                subtree={
+                                    {
+                                        retrieve="all",
+                                        extract = "true",
+                                        as= i.Return,
+                                    }
+                                }
+                            },
+
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
